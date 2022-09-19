@@ -1,11 +1,18 @@
 <div class="card">
   <div class="card-body">
     <form>
+      <!-- <div class="input-group p-3">
+        <input type="file" class="form-control" id="document" accept=".txt"
+        [(ngModel)]="file">
+      </div> -->
       <div class="input-group p-3">
-        <input type="file" class="form-control" id="document" accept=".txt">
+        <textarea class="form-control" name="text" id="text" rows="5"
+        [(ngModel)]="text"></textarea>
+
       </div>
       <div class="input-group p-3">
-        <select class="form-select" id="numero_bit" name="numero_bit">
+        <select class="form-select" id="numero_bit" name="numero_bit"
+        [(ngModel)]="bits">
           <option selected>Seleccione el numero de bits</option>
           <option value="8">8</option>
           <option value="9">9</option>
@@ -13,8 +20,29 @@
         </select>
       </div>
       <div class="d-flex justify-content-end p-3">
-        <button type="submit" class="btn btn-primary">Codificar</button>
+        <button
+        type="submit"
+        class="btn btn-primary"
+        (click)="codificar()">Codificar</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header text-center">
+    <strong>ASCII</strong>
+  </div>
+  <div class="card-body">
+    {{ascii_text}}
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header text-center">
+    <strong>BINARIO</strong>
+  </div>
+  <div class="card-body">
+    {{binary_text}}
   </div>
 </div>

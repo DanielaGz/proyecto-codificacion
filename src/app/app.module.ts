@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormularioComponent } from './formulario/formulario.component';
 import { HeaderComponent } from './header/header.component';
+import { BinarioComponent } from './binario/binario.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FormularioComponent,
-    HeaderComponent
+    HeaderComponent,
+    BinarioComponent
   ],
   imports: [
     BrowserModule,
