@@ -19,6 +19,7 @@ export class FormularioComponent {
   binary_text: string;
   ascii_text: string;
   vol_text: string;
+  recept_vol_text: string;
 
   constructor(
     private codificacionService: CodificationService
@@ -33,6 +34,7 @@ export class FormularioComponent {
     this.binary_text = "";
     this.ascii_text = "";
     this.vol_text = "";
+    this.recept_vol_text = "";
   }
 
   handleFileInput(event : any) {
@@ -67,6 +69,8 @@ export class FormularioComponent {
     this.ascii_text = this.codificacionService.codification.ascii_text
     this.binary_text = this.codificacionService.codification.binary_text
     this.vol_text = this.codificacionService.to_vol(this.voltage)
+    //receptor
+    this.recept_vol_text = this.codificacionService.vol_to_binaria(this.voltage,this.vol_text);
 
   }  
 
