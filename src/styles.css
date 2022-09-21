@@ -12,3 +12,8 @@
   background: url(assets/bg-pattern.png), -webkit-gradient(linear, right top, left top, from(#7b4397), to(#2480dc));
   background: url(assets/bg-pattern.png), linear-gradient(to left, #7b4397, #2480dc)
 }
+
+.foot {
+  background: linear-gradient(to left, #3b2048, #0b2d4e);
+}
+

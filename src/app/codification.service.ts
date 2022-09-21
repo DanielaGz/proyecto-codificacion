@@ -4,8 +4,35 @@ import { Codification } from "./codification.model";
 @Injectable()
 export class CodificationService{
   codification: Codification = new Codification('', 0,'','');
+  intervals: Number[];
+  segments: Number[];
 
-  constructor(){}
+  constructor(){
+    this.intervals = []
+    this.segments = []
+  }
+
+  getIntervals(){
+    let aux = []
+    for (var i = 0; i < (this.intervals.length-1); i++){
+      aux.push(this.intervals[i] + '-' + this.intervals[i+1])
+    }
+    return aux
+  }
+
+  getSegments(){
+    let aux = []
+    for (var i = 0; i < (this.segments.length-1); i++){
+      aux.push(this.segments[i] + '-' + this.segments[i+1])
+    }
+    return aux
+  }
+
+  set(val : any){
+    if (typeof(val) == 'string'){
+      this.codification.text = val
+    }
+  }
 
   setCodificationObject(codification : Codification){
     this.codification = codification
@@ -58,7 +85,9 @@ export class CodificationService{
     let interval_array = [cant_interval]; //16
     let tam_interval = voltage / (cant_interval * this.codification.bits) //x, vol = 1
     segments_array = this.to_segmento(tam_interval);
+    this.segments = segments_array
     interval_array = this.to_interval(tam_interval);
+    this.intervals = interval_array
     let text = ""
 
 
@@ -79,8 +108,8 @@ export class CodificationService{
 
   to_segmento(tam_intervalo: Number) {
     let segments_array = [0,];
-    let tam = Number(tam_intervalo) * 16;
-    for (var i = 1; i < this.codification.bits; i++) {
+    let tam = (Number(tam_intervalo)*1000) * 16;
+    for (var i = 1; i <= this.codification.bits; i++) {
       segments_array.push(Number(i * tam));
     }
     return segments_array
@@ -88,8 +117,8 @@ export class CodificationService{
 
   to_interval(tam_intervalo: Number) {
     let interval_array = [];
-    let tam = Number(tam_intervalo);
-    for (var i = 0; i < 16; i++) {
+    let tam = Number(tam_intervalo)*1000;
+    for (var i = 0; i <= 16; i++) {
       interval_array.push(Number(i * tam));
     }
     return interval_array
@@ -177,7 +206,7 @@ export class CodificationService{
     let num = x.toString(2);
     while(num.length<bits){
       num ="0"+num
-   }
+    }
     return num
   }
 }
