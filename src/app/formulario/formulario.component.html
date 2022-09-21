@@ -2,17 +2,19 @@
   <div class="card-body">
     <form>
       <!-- <div class="input-group p-3">
-        <input type="file" class="form-control" id="document" accept=".txt"
-        [(ngModel)]="file">
+        <input type="file" class="form-control" id="document" name="document" accept="image/*,.txt"
+        (change)="handleFileInput($event)">
+        
       </div> -->
+      
       <div class="input-group p-3">
         <textarea class="form-control" name="text" id="text" rows="5"
-        [(ngModel)]="text"></textarea>
+        [(ngModel)]="text" required></textarea>
 
       </div>
       <div class="input-group p-3">
-        <select class="form-select" id="numero_bit" name="numero_bit"
-        [(ngModel)]="bits">
+        <select class="form-select" id="bits" name="bits"
+        [(ngModel)]="bits" required>
           <option selected>Seleccione el numero de bits</option>
           <option value="8">8</option>
           <option value="9">9</option>
