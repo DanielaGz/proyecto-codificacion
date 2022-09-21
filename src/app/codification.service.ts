@@ -209,4 +209,24 @@ export class CodificationService{
     }
     return num
   }
+
+  binaria_to_number(binari_text: string){
+    let num_text = "";
+    for (const bin of binari_text.split(" ")) {
+      if (bin != "") {
+        num_text += this.Binary_to_Decimal(bin)+","
+      }
+    }
+    return num_text
+  }
+
+  num_to_asciiletters(num_text: string){
+    let letters_text = "";
+    for (const num of num_text.split(",")) {
+      if (num != "") {
+      letters_text += String.fromCharCode(parseInt(num))+"";
+      }
+    }
+    return letters_text
+  }
 }

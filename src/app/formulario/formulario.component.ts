@@ -20,6 +20,8 @@ export class FormularioComponent {
   ascii_text: string;
   vol_text: string;
   recept_vol_text: string;
+  recept_num_text: string;
+  recept_letters_text: string;
 
   segments: string[];
   intervals: string[];
@@ -38,6 +40,8 @@ export class FormularioComponent {
     this.ascii_text = "";
     this.vol_text = "";
     this.recept_vol_text = "";
+    this.recept_num_text = "";
+    this.recept_letters_text = "";
     this.intervals = [];
     this.segments = [];
   }
@@ -77,7 +81,8 @@ export class FormularioComponent {
     this.intervals = this.codificacionService.getIntervals()
     //receptor
     this.recept_vol_text = this.codificacionService.vol_to_binaria(this.voltage,this.vol_text);
-
+    this.recept_num_text = this.codificacionService.binaria_to_number(this.recept_vol_text);
+    this.recept_letters_text = this.codificacionService.num_to_asciiletters(this.recept_num_text);
   }  
 
 }
