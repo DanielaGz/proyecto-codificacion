@@ -6,21 +6,22 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormularioComponent } from './formulario/formulario.component';
 import { HeaderComponent } from './header/header.component';
-import { BinarioComponent } from './binario/binario.component';
+import { CodificationService } from './codification.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     FormularioComponent,
-    HeaderComponent,
-    BinarioComponent
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    CodificationService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
