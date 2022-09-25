@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { Codification } from "./codification.model";
 
 @Injectable()
-export class CodificationService{
+export class DecodificationService{
   codification: Codification = new Codification('', 0,'','');
   intervals: Number[];
   segments: Number[];
@@ -78,8 +78,7 @@ export class CodificationService{
     return message + " "
   }
 
-  to_vol(voltage : number) {
-
+  createTables(voltage : number){
     let cant_interval = 16;
     let segments_array = [this.codification.bits]; //8
     let interval_array = [cant_interval]; //16
@@ -88,23 +87,7 @@ export class CodificationService{
     this.segments = segments_array
     interval_array = this.to_interval(tam_interval);
     this.intervals = interval_array
-    let text = ""
-
-
-    for (const bin of this.codification.binary_text.split(" ")) {
-      if (bin != "") {
-        let seg = bin.substring(1, 4);
-        let inter = bin.substring(4, 8);
-        let signo = "+"
-        if (bin.substring(0, 1) == "1") { signo = "-" }
-        text += signo + (segments_array[this.Binary_to_Decimal(seg)] + interval_array[this.Binary_to_Decimal(inter)]) + " ";
-      }
-    }
-
-    return text
-  }
-
-  
+  }  
 
   to_segmento(tam_intervalo: Number) {
     let segments_array = [0,];
@@ -140,5 +123,86 @@ export class CodificationService{
       text += list[i] + " ";
     }
     return text
+  }
+
+  vol_to_binaria(voltage : number, vol_text: string){
+
+    let binary_text = ""
+    
+    for (const vol of vol_text.split(" ")) {
+      let binario = ""
+      if (vol != "") {
+        if (vol.substring(0, 1) == '+'){ //signo positivo
+          binario += "0";
+        }else{ //signo negativo
+          binario += "1";
+        }
+        let mun_segmento = -1;
+        for (var i = 0; i < (this.segments.length-1); i++) { //buscar segmento
+          //binary_text += i + " s:" +segments_array[i] + " v:" +parseFloat(vol.substring(1)) + " sig:" + segments_array[i+1]+ " "
+          if(this.segments[i]<=parseFloat(vol.substring(1)) && this.segments[i+1]>parseFloat(vol.substring(1))){
+            mun_segmento = i
+              break;
+            }
+        }
+
+        if(mun_segmento == -1){//verifcar que encontro un segmento -> mun_segmenyo 
+          mun_segmento = (this.intervals.length-1);
+        }
+        
+        // buscar intervalo
+
+        let mun_intervalo = -1;
+        let aux = parseFloat(vol.substring(1)) - Number(this.segments[mun_segmento]);
+        //console.log("nn",aux, parseFloat(vol.substring(1)), segments_array[mun_segmento]);
+        for (var i = 0; i < (this.intervals.length-1); i++) { //buscar segmento
+          if(this.intervals[i]<=aux && this.intervals[i+1]>aux){
+            mun_intervalo = i
+              break;
+            }
+        }
+
+        if(mun_intervalo == -1){//verifcar que encontro un intervalo -> mun_intervalo, sino significa que es el ultimo 
+          mun_intervalo = (this.intervals.length);
+        }
+
+        // tocar pasar el mun_segmenyo a binario si es 8bits, entonees solo puete tener 3 ceros -> 1 = 001, 4 = 100
+        let seg_binario = this.pasarabinario(mun_segmento, 3) //pasar a binario
+        let intr_binario = this.pasarabinario(mun_intervalo, 4) //pasar a binario
+
+        binario += seg_binario+""+intr_binario;
+
+        binary_text += binario+" "
+      }
+    }
+    return binary_text //+ this.print_array(segments_array);
+  }
+
+  pasarabinario(x: Number, bits: Number){
+    let num = x.toString(2);
+    while(num.length<bits){
+      num ="0"+num
+    }
+    return num
+  }
+
+  binaria_to_number(binari_text: string){
+    let num_text = "";
+    for (const bin of binari_text.split(" ")) {
+      if (bin != "") {
+        num_text += this.Binary_to_Decimal(bin)+","
+      }
+    }
+    return num_text
+  }
+
+  num_to_asciiletters(num_text: string){
+    let letters_text = "";
+    for (const num of num_text.split(",")) {
+      if (num != "") {
+      letters_text += String.fromCharCode(parseInt(num))+"";
+      }
+    }
+    return letters_text
   }
 }

@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { Codification } from "./codification.model";
 
 @Injectable()
-export class CodificationService{
+export class BlindSearchService{
   codification: Codification = new Codification('', 0,'','');
   intervals: Number[];
   segments: Number[];

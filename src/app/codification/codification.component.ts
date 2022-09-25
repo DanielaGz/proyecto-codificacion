@@ -3,11 +3,11 @@ import { CodificationService } from '../codification.service';
 import { Codification } from '../codification.model';
 
 @Component({
-  selector: 'app-formulario',
-  templateUrl: './formulario.component.html',
-  styleUrls: ['./formulario.component.css']
+  selector: 'app-codification',
+  templateUrl: './codification.component.html',
+  styleUrls: ['./codification.component.css']
 })
-export class FormularioComponent {
+export class CodificationComponent {
 
   document: File | null;
 
@@ -26,6 +26,10 @@ export class FormularioComponent {
   segments: string[];
   intervals: string[];
 
+  time: number;
+  show_time : boolean;
+
+  select_file : boolean;
   constructor(
     private codificacionService: CodificationService
   ) {
@@ -44,6 +48,9 @@ export class FormularioComponent {
     this.recept_letters_text = "";
     this.intervals = [];
     this.segments = [];
+    this.time = 0;
+    this.show_time = false;
+    this.select_file = false;
   }
 
   handleFileInput(event : any) {
@@ -53,22 +60,20 @@ export class FormularioComponent {
     fileReader.readAsText(this.file)
     fileReader.onload = (e) => {
       this.codificacionService.set(fileReader.result)
-    }
-    
+    }  
   }
 
-  setCodificationObject() {
-    let document = new Codification(
-      this.text,
-      this.bits,
-      "",
-      ""
-    )
-    this.codificacionService.setCodificationObject(document)
+  selectFile(event : any) {
+    this.select_file = event.target.checked
   }
 
   codificar(){
-    this.text =this.codificacionService.codification.text
+    var startTime = performance.now()
+    if(this.select_file){
+      this.text =this.codificacionService.codification.text
+    }else{
+      this.codificacionService.codification.text = this.text
+    }
     let codificacion = new Codification(this.codificacionService.codification.text, this.bits, '', '')
     this.codificacionService.codification = codificacion
     this.bits_array = this.codificacionService.getArrayBits()
@@ -79,7 +84,12 @@ export class FormularioComponent {
     
     this.segments = this.codificacionService.getSegments()
     this.intervals = this.codificacionService.getIntervals()
-    //receptor
+    var endTime = performance.now()
+    this.time= (endTime - startTime)/1000
+    this.show_time = true;
   }  
 
+  hide(){
+    this.show_time = false;
+  }
 }

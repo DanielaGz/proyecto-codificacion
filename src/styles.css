@@ -5,12 +5,33 @@
   position: relative;
   text-align: center;
   width: 100%;
-  padding-top: 100px;
+  padding-top: 80px;
   padding-bottom: 100px;
   color: #fff;
   background: url(assets/bg-pattern.png), #7b4397;
   background: url(assets/bg-pattern.png), -webkit-gradient(linear, right top, left top, from(#7b4397), to(#2480dc));
-  background: url(assets/bg-pattern.png), linear-gradient(to left, #7b4397, #2480dc)
+  background: url(assets/bg-pattern.png), linear-gradient(to left, #723e8c, #2277cc)
+}
+
+.navi {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  text-align: center;
+  width: 100%;
+  padding-top: 5px;
+  color: #fff;
+  background: url(assets/bg-pattern.png), #7b4397;
+  background: url(assets/bg-pattern.png), -webkit-gradient(linear, right top, left top, from(#7b4397), to(#2480dc));
+  background: url(assets/bg-pattern.png), linear-gradient(to left, #66387d, #1f6cb9)
+}
+
+.navi button{
+  color: white;
+}
+
+.navi button:hover {
+  color: rgb(233, 232, 240);
 }
 
 .foot {
