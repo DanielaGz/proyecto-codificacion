@@ -3,11 +3,11 @@ import { CodificationService } from '../codification.service';
 import { Codification } from '../codification.model';
 
 @Component({
-  selector: 'app-formulario',
-  templateUrl: './formulario.component.html',
-  styleUrls: ['./formulario.component.css']
+  selector: 'app-blind-search',
+  templateUrl: './blind-search.component.html',
+  styleUrls: ['./blind-search.component.css']
 })
-export class FormularioComponent {
+export class BlindSearchComponent {
 
   document: File | null;
 
@@ -79,7 +79,5 @@ export class FormularioComponent {
     
     this.segments = this.codificacionService.getSegments()
     this.intervals = this.codificacionService.getIntervals()
-    //receptor
   }  
-
 }

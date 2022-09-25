@@ -7,14 +7,22 @@ import { AppComponent } from './app.component';
 import { FormularioComponent } from './formulario/formulario.component';
 import { HeaderComponent } from './header/header.component';
 import { CodificationService } from './codification.service';
+import { DecodificationService } from './decodification.service';
+import { BlindSearchService } from './blind-search.service';
 import { FooterComponent } from './footer/footer.component';
+import { CodificationComponent } from './codification/codification.component';
+import { DecodificationComponent } from './decodification/decodification.component';
+import { BlindSearchComponent } from './blind-search/blind-search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FormularioComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    CodificationComponent,
+    DecodificationComponent,
+    BlindSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +30,9 @@ import { FooterComponent } from './footer/footer.component';
     FormsModule
   ],
   providers: [
-    CodificationService
+    CodificationService,
+    DecodificationService,
+    BlindSearchService
   ],
   bootstrap: [AppComponent]
 })
