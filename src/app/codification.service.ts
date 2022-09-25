@@ -7,6 +7,27 @@ export class CodificationService{
   intervals: Number[];
   segments: Number[];
 
+  bits = {
+    "8": {
+      "intervals" : 16,
+      "segments" : 8,
+      "seg" : 3,
+      "int" : 4
+    },
+    "9": {
+      "intervals" : 16,
+      "segments" : 16,
+      "seg" : 4,
+      "int" : 4
+    },
+    "10": {
+      "intervals" : 16,
+      "segments" : 32,
+      "seg" : 5,
+      "int" : 4
+    }
+  }
+
   constructor(){
     this.intervals = []
     this.segments = []
@@ -80,7 +101,7 @@ export class CodificationService{
 
   to_vol(voltage : number) {
 
-    let cant_interval = 16;
+    let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
     let segments_array = [this.codification.bits]; //8
     let interval_array = [cant_interval]; //16
     let tam_interval = voltage / (cant_interval * this.codification.bits) //x, vol = 1
@@ -93,8 +114,8 @@ export class CodificationService{
 
     for (const bin of this.codification.binary_text.split(" ")) {
       if (bin != "") {
-        let seg = bin.substring(1, 4);
-        let inter = bin.substring(4, 8);
+        let seg = bin.substring(1, (this.bits as any)[this.codification.bits]['seg']+1);
+        let inter = bin.substring((this.bits as any)[this.codification.bits]['seg']+1, this.codification.bits);
         let signo = "+"
         if (bin.substring(0, 1) == "1") { signo = "-" }
         text += signo + (segments_array[this.Binary_to_Decimal(seg)] + interval_array[this.Binary_to_Decimal(inter)]) + " ";
@@ -107,8 +128,9 @@ export class CodificationService{
   
 
   to_segmento(tam_intervalo: Number) {
+    let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
     let segments_array = [0,];
-    let tam = (Number(tam_intervalo)*1000) * 16;
+    let tam = (Number(tam_intervalo)*1000) * cant_interval;
     for (var i = 1; i <= this.codification.bits; i++) {
       segments_array.push(Number(i * tam));
     }
@@ -116,9 +138,10 @@ export class CodificationService{
   }
 
   to_interval(tam_intervalo: Number) {
+    let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
     let interval_array = [];
     let tam = Number(tam_intervalo)*1000;
-    for (var i = 0; i <= 16; i++) {
+    for (var i = 0; i <= cant_interval; i++) {
       interval_array.push(Number(i * tam));
     }
     return interval_array

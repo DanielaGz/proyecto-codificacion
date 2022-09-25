@@ -7,6 +7,27 @@ export class DecodificationService{
   intervals: Number[];
   segments: Number[];
 
+  bits = {
+    "8": {
+      "intervals" : 16,
+      "segments" : 8,
+      "seg" : 3,
+      "int" : 4
+    },
+    "9": {
+      "intervals" : 16,
+      "segments" : 16,
+      "seg" : 4,
+      "int" : 4
+    },
+    "10": {
+      "intervals" : 16,
+      "segments" : 32,
+      "seg" : 5,
+      "int" : 4
+    }
+  }
+
   constructor(){
     this.intervals = []
     this.segments = []
@@ -38,10 +59,10 @@ export class DecodificationService{
     this.codification = codification
   }
 
-  getArrayBits(){
+  getArrayBits(num : number){
     let bits_array = []
 
-    for (var i = (this.codification.bits - 1); i >= 0; i--) {
+    for (var i = (num - 1); i >= 0; i--) {
       bits_array.push(Math.pow(2, i))
     }
 
@@ -58,7 +79,7 @@ export class DecodificationService{
 
     let message = ""
     for (const char of ascii) {
-      message += this.to_by(char, bits_array)
+      message += this.to_by(char, bits_array)+" "
     }
 
     this.codification.binary_text = message
@@ -75,11 +96,12 @@ export class DecodificationService{
         message += '0'
       }
     }
-    return message + " "
+    return message
   }
 
   createTables(voltage : number){
-    let cant_interval = 16;
+    let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
+    console.log(cant_interval)
     let segments_array = [this.codification.bits]; //8
     let interval_array = [cant_interval]; //16
     let tam_interval = voltage / (cant_interval * this.codification.bits) //x, vol = 1
@@ -90,8 +112,9 @@ export class DecodificationService{
   }  
 
   to_segmento(tam_intervalo: Number) {
+    let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
     let segments_array = [0,];
-    let tam = (Number(tam_intervalo)*1000) * 16;
+    let tam = (Number(tam_intervalo)*1000) * cant_interval;
     for (var i = 1; i <= this.codification.bits; i++) {
       segments_array.push(Number(i * tam));
     }
@@ -99,10 +122,11 @@ export class DecodificationService{
   }
 
   to_interval(tam_intervalo: Number) {
+    let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
     let interval_array = [];
     let tam = Number(tam_intervalo)*1000;
-    for (var i = 0; i <= 16; i++) {
-      interval_array.push(Number(i * tam));
+    for (var i = 0; i <= cant_interval; i++) {
+      interval_array.push(Number(i * tam).toFixed(5));
     }
     return interval_array
   }
@@ -153,7 +177,8 @@ export class DecodificationService{
         // buscar intervalo
 
         let mun_intervalo = -1;
-        let aux = parseFloat(vol.substring(1)) - Number(this.segments[mun_segmento]);
+        let aux = Number((parseFloat(vol.substring(1)) - Number(this.segments[mun_segmento])).toFixed(5));
+        console.log(aux)
         //console.log("nn",aux, parseFloat(vol.substring(1)), segments_array[mun_segmento]);
         for (var i = 0; i < (this.intervals.length-1); i++) { //buscar segmento
           if(this.intervals[i]<=aux && this.intervals[i+1]>aux){
@@ -167,8 +192,13 @@ export class DecodificationService{
         }
 
         // tocar pasar el mun_segmenyo a binario si es 8bits, entonees solo puete tener 3 ceros -> 1 = 001, 4 = 100
-        let seg_binario = this.pasarabinario(mun_segmento, 3) //pasar a binario
-        let intr_binario = this.pasarabinario(mun_intervalo, 4) //pasar a binario
+        let seg_binario = this.to_by(mun_segmento, this.getArrayBits((this.bits as any)[this.codification.bits]['seg'])) //pasar a binario
+        let intr_binario = this.to_by(mun_intervalo, this.getArrayBits((this.bits as any)[this.codification.bits]['int'])) //pasar a binario
+
+        console.log(mun_segmento+" "+seg_binario)
+        console.log(mun_intervalo+" "+intr_binario)
+        console.log('-------------------')
+
 
         binario += seg_binario+""+intr_binario;
 

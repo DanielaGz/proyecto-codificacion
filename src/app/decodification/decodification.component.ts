@@ -78,7 +78,7 @@ export class DecodificationComponent {
     }
     let codificacion = new Codification(this.vol_text, this.bits, '', '')
     this.decodificacionService.codification = codificacion
-    this.bits_array = this.decodificacionService.getArrayBits()
+    this.bits_array = this.decodificacionService.getArrayBits(this.decodificacionService.codification.bits)
     this.decodificacionService.createTables(this.voltage)
     
     this.segments = this.decodificacionService.getSegments()
