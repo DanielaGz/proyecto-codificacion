@@ -29,6 +29,8 @@ export class CodificationComponent {
   time: number;
   show_time : boolean;
 
+  imgUrl: any;
+
   select_file : boolean;
   constructor(
     private codificacionService: CodificationService
@@ -56,11 +58,28 @@ export class CodificationComponent {
   handleFileInput(event : any) {
     this.file = event.target.files[0]
     let fileReader = new FileReader();
+    const filereader = new FileReader();
 
-    fileReader.readAsText(this.file)
-    fileReader.onload = (e) => {
-      this.codificacionService.set(fileReader.result)
-    }  
+    if (this.file.type.includes('image') == true) {
+      
+      filereader.readAsDataURL(this.file)
+      const that = this;
+  
+      filereader.onload = function() {
+              that.imgUrl = this.result;
+              that.codificacionService.set(this.result);        
+      };
+    
+      
+    }else{
+      this.imgUrl = "";
+      fileReader.readAsText(this.file)
+      fileReader.onload = (e) => {
+        this.codificacionService.set(fileReader.result)
+      }
+
+    } 
+
   }
 
   selectFile(event : any) {
@@ -69,10 +88,12 @@ export class CodificationComponent {
 
   codificar(){
     var startTime = performance.now()
+    
     if(this.select_file){
-      this.text =this.codificacionService.codification.text
+      this.text = this.codificacionService.codification.text = this.darFormatoPaquete(this.codificacionService.codification.text, this.file.type);
     }else{
-      this.codificacionService.codification.text = this.text
+      this.codificacionService.codification.text = this.darFormatoPaquete(this.text, "text/plain");
+      this.text =this.codificacionService.codification.text
     }
     let codificacion = new Codification(this.codificacionService.codification.text, this.bits, '', '')
     this.codificacionService.codification = codificacion
@@ -91,5 +112,23 @@ export class CodificationComponent {
 
   hide(){
     this.show_time = false;
+  }
+
+  darFormatoPaquete(contenido: string, tipo: string){
+    let json = JSON.stringify(
+      {
+        "paquete": 
+          [
+            {
+              "tipoproceso":"codificar",
+              "archivo": { "tipo":tipo, "contenido":contenido},
+              "origen":"UD",
+            }
+            
+          ]
+      }
+      );
+
+    return json;
   }
 }

@@ -45,7 +45,7 @@
 
                 <div class="d-flex justify-content-end p-3">
                     <button type="submit" class="btn btn-primary rounded rounded-pill"
-                        (click)="decodificar()">Codificar</button>
+                        (click)="decodificar()">Decodificar</button>
                 </div>
             </form>
         </div>
@@ -141,5 +141,13 @@
         <div class="card-body overflow-auto" style="max-height: 400px;">
             {{recept_letters_text}}
         </div>
+
+        <div class="input-group p-3" *ngIf="imgUrl">
+            <img src='{{imgUrl}}'>
+        </div>
+
     </div>
+
+    
+
 </div>

@@ -32,6 +32,9 @@
                     <input type="file" class="form-control" id="document" name="document" accept="image/*,.txt"
                         (change)="handleFileInput($event)">
                 </div>
+                <div class="input-group p-3" *ngIf="select_file">
+                    <img src='{{imgUrl}}'>
+                </div>
 
                 <div class="input-group p-3">
                     <select class="form-select" id="bits" name="bits" [(ngModel)]="bits" required>
