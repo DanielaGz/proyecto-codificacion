@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CodificationService } from '../codification.service';
+import { BlindSearchService } from '../blind-search.service';
 import { Codification } from '../codification.model';
 
 @Component({
@@ -26,8 +26,15 @@ export class BlindSearchComponent {
   segments: string[];
   intervals: string[];
 
+  time: number;
+  show_time : boolean;
+
+  select_file : boolean;
+
+  imgUrl: any;
+
   constructor(
-    private codificacionService: CodificationService
+    private blindSearchService: BlindSearchService
   ) {
     this.document = null;
 
@@ -44,6 +51,9 @@ export class BlindSearchComponent {
     this.recept_letters_text = "";
     this.intervals = [];
     this.segments = [];
+    this.time = 0;
+    this.show_time = false;
+    this.select_file = false;
   }
 
   handleFileInput(event : any) {
@@ -52,32 +62,72 @@ export class BlindSearchComponent {
 
     fileReader.readAsText(this.file)
     fileReader.onload = (e) => {
-      this.codificacionService.set(fileReader.result)
+      this.blindSearchService.set(fileReader.result)
+    }
+  }
+
+  selectFile(event : any) {
+    this.select_file = event.target.checked
+  }
+
+
+  decodificar(){
+
+    const listaBistBusqueda = [8,9,10];
+    var startTime = performance.now()
+
+    if(this.select_file){
+      this.vol_text =this.blindSearchService.codification.text
+    }else{
+      this.blindSearchService.codification.text = this.vol_text
+    }
+
+    for(const bit of listaBistBusqueda) {
+      this.bits = bit;
+      console.log(this.bits, "----------")
+      let codificacion = new Codification(this.vol_text, this.bits, '', '')
+      this.blindSearchService.codification = codificacion
+      this.bits_array = this.blindSearchService.getArrayBits(this.blindSearchService.codification.bits)
+      this.blindSearchService.createTables(this.voltage)
+      
+      this.segments = this.blindSearchService.getSegments()
+      this.intervals = this.blindSearchService.getIntervals()
+      //receptor
+      this.recept_vol_text = this.blindSearchService.vol_to_binaria(this.voltage,this.vol_text);
+      this.recept_num_text = this.blindSearchService.binaria_to_number(this.recept_vol_text);
+      this.recept_letters_text = this.blindSearchService.num_to_asciiletters(this.recept_num_text);
+  
+      let j = this.ConvertiraJSON(this.recept_letters_text)
+      
+      if (j != false){
+        this.recept_letters_text = j.paquete[0].archivo.contenido;
+        if (j.paquete[0].archivo.tipo.includes('image') == true) {
+          this.imgUrl = this.recept_letters_text
+        }
+        break;
+      }
+      
     }
     
-  }
-
-  setCodificationObject() {
-    let document = new Codification(
-      this.text,
-      this.bits,
-      "",
-      ""
-    )
-    this.codificacionService.setCodificationObject(document)
-  }
-
-  codificar(){
-    this.text =this.codificacionService.codification.text
-    let codificacion = new Codification(this.codificacionService.codification.text, this.bits, '', '')
-    this.codificacionService.codification = codificacion
-    this.bits_array = this.codificacionService.getArrayBits()
-    this.codificacionService.getAsciiText(this.bits_array)
-    this.ascii_text = this.codificacionService.codification.ascii_text
-    this.binary_text = this.codificacionService.codification.binary_text
-    this.vol_text = this.codificacionService.to_vol(this.voltage)
-    
-    this.segments = this.codificacionService.getSegments()
-    this.intervals = this.codificacionService.getIntervals()
+    var endTime = performance.now()
+    this.time= (endTime - startTime)/1000
+    this.show_time = true;
   }  
+
+  hide(){
+    this.show_time = false;
+  }
+
+  ConvertiraJSON(x: string){
+    let j: any;
+    try {
+      j = JSON.parse(x); // Convertir Texto en formato Json en un Objeto/Arreglo
+    } catch (error) {
+      console.error("Error Convetir a JSON");
+      return false;
+    }
+
+    return j;
+  }
+
 }

@@ -31,6 +31,8 @@ export class DecodificationComponent {
 
   select_file : boolean;
 
+  imgUrl: any;
+
   constructor(
     private decodificacionService: DecodificationService
   ) {
@@ -88,6 +90,14 @@ export class DecodificationComponent {
     this.recept_num_text = this.decodificacionService.binaria_to_number(this.recept_vol_text);
     this.recept_letters_text = this.decodificacionService.num_to_asciiletters(this.recept_num_text);
 
+    let j = this.ConvertiraJSON(this.recept_letters_text)
+    if (j != false){
+      this.recept_letters_text = j.paquete[0].archivo.contenido;
+      if (j.paquete[0].archivo.tipo.includes('image') == true) {
+        this.imgUrl = this.recept_letters_text
+      }
+    }
+    
     var endTime = performance.now()
     this.time= (endTime - startTime)/1000
     this.show_time = true;
@@ -95,6 +105,18 @@ export class DecodificationComponent {
 
   hide(){
     this.show_time = false;
+  }
+
+  ConvertiraJSON(x: string){
+    let j: any;
+    try {
+      j = JSON.parse(x); // Convertir Texto en formato Json en un Objeto/Arreglo
+    } catch (error) {
+      console.error("Error Convetir a JSON");
+      return false;
+    }
+
+    return j;
   }
 
 }
