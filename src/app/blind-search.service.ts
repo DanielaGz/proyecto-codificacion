@@ -6,6 +6,7 @@ export class BlindSearchService{
   codification: Codification = new Codification('', 0,'','');
   intervals: Number[];
   segments: Number[];
+  tam_interval: Number = 0;
 
   bits = {
     "8": {
@@ -101,21 +102,28 @@ export class BlindSearchService{
 
   createTables(voltage : number){
     let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
+    
     //console.log(cant_interval)
-    let segments_array = [this.codification.bits]; //8
+    let segments_array = (this.bits as any)[this.codification.bits]['segments']; //8
     let interval_array = [cant_interval]; //16
-    let tam_interval = voltage / (cant_interval * this.codification.bits) //x, vol = 1
-    segments_array = this.to_segmento(tam_interval);
+    this.tam_interval = voltage / (cant_interval * segments_array) //x, vol = 
+    segments_array = this.to_segmento(this.tam_interval);
+    
     this.segments = segments_array
-    interval_array = this.to_interval(tam_interval);
+    interval_array = this.to_interval(this.tam_interval);
+    
     this.intervals = interval_array
   }  
 
   to_segmento(tam_intervalo: Number) {
     let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
+    let cant_segments= (this.bits as any)[this.codification.bits]['segments'];
+
     let segments_array = [0,];
+
     let tam = (Number(tam_intervalo)*1000) * cant_interval;
-    for (var i = 1; i <= this.codification.bits; i++) {
+
+    for (var i = 1; i <= cant_segments; i++) {
       segments_array.push(Number(i * tam));
     }
     return segments_array
@@ -125,8 +133,9 @@ export class BlindSearchService{
     let cant_interval = (this.bits as any)[this.codification.bits]['intervals'];
     let interval_array = [];
     let tam = Number(tam_intervalo)*1000;
+    
     for (var i = 0; i <= cant_interval; i++) {
-      interval_array.push(Number(i * tam).toFixed(5));
+      interval_array.push(Number(i * tam));
     }
     return interval_array
   }
@@ -171,7 +180,7 @@ export class BlindSearchService{
         }
 
         if(mun_segmento == -1){//verifcar que encontro un segmento -> mun_segmenyo 
-          mun_segmento = (this.intervals.length-1);
+          mun_segmento = (this.segments.length-1);
         }
         
         // buscar intervalo
