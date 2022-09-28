@@ -93,9 +93,10 @@ export class DecodificationComponent {
     let j = this.ConvertiraJSON(this.recept_letters_text)
     if (j != false){
       this.recept_letters_text = j.paquete[0].archivo.contenido;
-      if (j.paquete[0].archivo.tipo.includes('image') == true) {
-        this.imgUrl = this.recept_letters_text
-      }
+    }
+
+    if (this.recept_letters_text.includes('data:image/') == true) {
+      this.imgUrl = this.recept_letters_text
     }
     
     var endTime = performance.now()
@@ -112,7 +113,7 @@ export class DecodificationComponent {
     try {
       j = JSON.parse(x); // Convertir Texto en formato Json en un Objeto/Arreglo
     } catch (error) {
-      console.error("Error Convetir a JSON");
+      console.error("Mensaje Incompleto/Frangmentado o bits no correptos");
       return false;
     }
 

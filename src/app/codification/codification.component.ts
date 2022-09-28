@@ -90,10 +90,11 @@ export class CodificationComponent {
     var startTime = performance.now()
     
     if(this.select_file){
-      this.text = this.codificacionService.codification.text = this.darFormatoPaquete(this.codificacionService.codification.text, this.file.type);
+      this.text = this.codificacionService.codification.text;
+      this.codificacionService.codification.text = this.darFormatoPaquete(this.codificacionService.codification.text, this.file.type);
     }else{
       this.codificacionService.codification.text = this.darFormatoPaquete(this.text, "text/plain");
-      this.text =this.codificacionService.codification.text
+      //this.text =this.codificacionService.codification.text
     }
     let codificacion = new Codification(this.codificacionService.codification.text, this.bits, '', '')
     this.codificacionService.codification = codificacion

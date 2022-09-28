@@ -34,6 +34,14 @@
                         (change)="handleFileInput($event)">
                 </div>
 
+                <div class="input-group p-3">
+                    <select class="form-select" id="metodo" name="metodo" [(ngModel)]="metodo" required>
+                        <option selected>Seleccione metodo</option>
+                        <option value="1">Por Análisis Estructura Mensaje - Coherencia </option>
+                        <option value="2">Por Recursividad y Comparación</option>
+                    </select>
+                </div>
+
                 <div class="d-flex justify-content-end p-3">
                     <button type="submit" class="btn btn-primary rounded rounded-pill"
                         (click)="decodificar()">Decodificar a Ciegas</button>
@@ -127,7 +135,7 @@
 
     <div class="card mt-3 shadow-sm p-3 mb-5 bg-white rounded">
         <div class="card-header text-center">
-            <strong>RECEPTOR CODIGO ASCII A LETRAS (Mensaje)</strong>
+            <strong>RECEPTOR CODIGO ASCII A LETRAS (Mensaje) - {{bits}} bits</strong>
         </div>
         <div class="card-body overflow-auto" style="max-height: 400px;">
             {{recept_letters_text}}
